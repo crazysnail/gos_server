@@ -1,0 +1,12 @@
+[INFO] tcppeer 2018/07/11 17:31:39 #tcp.listen(CenterSeverTcpService) 0.0.0.0:18800
+[INFO] tcppeer 2018/07/11 17:37:08 #tcp.listen(CenterSeverTcpService) 0.0.0.0:18800
+[DEBU] tcpproc 2018/07/11 17:37:55 #tcp.recv(CenterSeverTcpService)@1 len: 0 SessionAccepted | {}
+[DEBU] CenterServerTcpService 2018/07/11 17:37:55 server accepted
+[DEBU] tcpproc 2018/07/11 17:40:46 #tcp.recv(CenterSeverTcpService)@1 len: 0 SessionClosed | {}
+[DEBU] CenterServerTcpService 2018/07/11 17:40:46 session closed:  1
+[DEBU] tcpproc 2018/07/11 17:41:14 #tcp.recv(CenterSeverTcpService)@2 len: 0 SessionAccepted | {}
+[DEBU] CenterServerTcpService 2018/07/11 17:41:14 server accepted
+[DEBU] tcpproc 2018/07/11 17:41:21 #tcp.recv(CenterSeverTcpService)@2 len: 0 SessionClosed | {}
+[DEBU] CenterServerTcpService 2018/07/11 17:41:21 session closed:  2
+[DEBU] tcpproc 2018/07/11 17:41:50 #tcp.recv(CenterSeverTcpService)@3 len: 0 SessionAccepted | {}
+[DEBU] CenterServerTcpService 2018/07/11 17:41:50 server accepted
