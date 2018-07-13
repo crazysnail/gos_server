@@ -4,7 +4,6 @@ import (
 	"github.com/davyxu/cellnet"
 	"github.com/davyxu/cellnet/peer"
 	"github.com/davyxu/cellnet/proc"
-	"github.com/davyxu/golog"
 
 	_ "github.com/davyxu/cellnet/peer/tcp"
 	_ "github.com/davyxu/cellnet/proc/tcp"
@@ -14,11 +13,8 @@ import (
 	"strings"
 
 	"gos_server/config"
-	"gos_server/proto"
+	"gos_server/proto/s2s_proto"
 )
-
-var tcpLog = golog.New("LoginServerTcpService")
-var tcpAddr = config.CenterServerIP+":"+config.CenterServerPort
 
 func TcpService() {
 
@@ -26,18 +22,18 @@ func TcpService() {
 	queue := cellnet.NewEventQueue()
 
 	// 创建一个tcp的连接器，名称为client，连接地址为127.0.0.1:8801，将事件投递到queue队列,单线程的处理（收发封包过程是多线程）
-	p := peer.NewGenericPeer("tcp.Connector", "LoginServerTcpService", tcpAddr, queue)
+	p := peer.NewGenericPeer("tcp.Connector", "LoginServerTcpService", config.CenterServerInner, queue)
 
 	// 设定封包收发处理的模式为tcp的ltv(Length-Type-Value), Length为封包大小，Type为消息ID，Value为消息内容
 	// 并使用switch处理收到的消息
 	proc.BindProcessorHandler(p, "tcp.ltv", func(ev cellnet.Event) {
 		switch msg := ev.Message().(type) {
 		case *cellnet.SessionConnected:
-			tcpLog.Debugln("LoginServerTcpService connected to the CenterServer: " + tcpAddr )
+			config.LogLoginServer.Debugln("LoginServerTcpService connected to the CenterServer: " + config.CenterServerInner )
 		case *cellnet.SessionClosed:
-			tcpLog.Debugln("LoginServerTcpService disconnected whith the CenterServer:" + tcpAddr )
-		case *proto.ChatACK:
-			tcpLog.Infof("sid%d say: %s", msg.Id, msg.Content)
+			config.LogLoginServer.Debugln("LoginServerTcpService disconnected whith the CenterServer:" + config.CenterServerInner )
+		case *s2s_proto.ChatACK:
+			config.LogLoginServer.Infof("sid%d say: %s", msg.Id, msg.Content)
 		}
 	})
 
@@ -52,7 +48,7 @@ func TcpService() {
 
 		p.(interface {
 			Session() cellnet.Session
-		}).Session().Send(&proto.ChatREQ{
+		}).Session().Send(&s2s_proto.ChatREQ{
 			Content: str,
 		})
 

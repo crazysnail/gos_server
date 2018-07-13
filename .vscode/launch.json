@@ -14,7 +14,7 @@
             "port": 2345,
             "host": "127.0.0.1",
             "program": "${workspaceRoot}/login_server",            
-            "env": {"GOPATH":"/Users/admin/work/go/"},
+            "env": {"GOPATH":"/Users/admin/work/go/","GOS_ROOT":"/Users/admin/work/go/src/gos_server/"},
             "args": [],
             "showLog": true
         },
@@ -28,7 +28,21 @@
             "port": 2345,
             "host": "127.0.0.1",
             "program": "${workspaceRoot}/center_server",            
-            "env": {"GOPATH":"/Users/admin/work/go/"},
+            "env": {"GOPATH":"/Users/admin/work/go/","GOS_ROOT":"/Users/admin/work/go/src/gos_server/"},
+            "args": [],
+            "showLog": true
+        },
+
+        {
+            "name": "GameServer",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/game_server",            
+            "env": {"GOPATH":"/Users/admin/work/go/","GOS_ROOT":"/Users/admin/work/go/src/gos_server/"},
             "args": [],
             "showLog": true
         }

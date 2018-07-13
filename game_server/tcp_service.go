@@ -4,7 +4,6 @@ import (
 	"github.com/davyxu/cellnet"
 	"github.com/davyxu/cellnet/peer"
 	"github.com/davyxu/cellnet/proc"
-	"github.com/davyxu/golog"
 
 	_ "github.com/davyxu/cellnet/peer/tcp"
 	_ "github.com/davyxu/cellnet/proc/tcp"
@@ -12,13 +11,15 @@ import (
 	"bufio"
 	"os"
 	"strings"
-	
-	"gos_server/config"
-	"gos_server/proto"
 )
 
-var tcpLog = golog.New("GameServerTcpService")
-var tcpAddr = config.CenterServerIP+":"+config.CenterServerPort
+import(
+		
+	"gos_server/config"
+	"gos_server/proto/s2s_proto"
+	"gos_server/game_server/db/user_db"
+)
+
 
 func TcpService() {
 
@@ -26,18 +27,29 @@ func TcpService() {
 	queue := cellnet.NewEventQueue()
 
 	// 创建一个tcp的连接器，名称为client，连接地址为127.0.0.1:8801，将事件投递到queue队列,单线程的处理（收发封包过程是多线程）
-	p := peer.NewGenericPeer("tcp.Connector", "GameServerTcpService", tcpAddr, queue)
+	p := peer.NewGenericPeer("tcp.Connector", "GameServerTcpService", config.CenterServerInner, queue)
 
 	// 设定封包收发处理的模式为tcp的ltv(Length-Type-Value), Length为封包大小，Type为消息ID，Value为消息内容
 	// 并使用switch处理收到的消息
 	proc.BindProcessorHandler(p, "tcp.ltv", func(ev cellnet.Event) {
 		switch msg := ev.Message().(type) {
 		case *cellnet.SessionConnected:
-			tcpLog.Debugln("GameServerTcpService connected to the CenterServer: " + tcpAddr )
+			config.LogGameServer.Debugln("GameServerTcpService connected to the CenterServer: " + config.CenterServerInner )
 		case *cellnet.SessionClosed:
-			tcpLog.Debugln("GameServerTcpService disconnected whith the CenterServer:" + tcpAddr )
-		case *proto.ChatACK:
-			tcpLog.Infof("sid%d say: %s", msg.Id, msg.Content)
+			config.LogGameServer.Debugln("GameServerTcpService disconnected whith the CenterServer:" + config.CenterServerInner )
+		case *s2s_proto.ChatACK:
+
+			// 写db	
+			name := msg.Content
+			user := user_db.Query(name)		
+			if user == nil {
+				user = user_db.New(name,"22223333333333")
+				if user == nil {
+					config.LogGameServer.Infoln("create user failed! name=",name)
+				}
+			}
+			
+			config.LogGameServer.Infof("sid%d say: %s", msg.Id, msg.Content)
 		}
 	})
 
@@ -52,7 +64,7 @@ func TcpService() {
 
 		p.(interface {
 			Session() cellnet.Session
-		}).Session().Send(&proto.ChatREQ{
+		}).Session().Send(&s2s_proto.ChatREQ{
 			Content: str,
 		})
 

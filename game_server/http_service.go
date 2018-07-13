@@ -13,27 +13,24 @@ import (
 	_ "github.com/davyxu/cellnet/proc/http"
 	"net/http"
 	"reflect"
-	"github.com/davyxu/golog"
-	
+
 	"gos_server/config"
-	"gos_server/proto"
+	"gos_server/proto/c2s_proto"
 )
 
-var httpLog = golog.New("GameSeverHttpService")
-var httpAddr = config.Game1ServerIP+":"+config.Game1ServerPort
 
 func HttpService() {
 	queue := cellnet.NewEventQueue()
-	p := peer.NewGenericPeer("http.Acceptor", "GameSeverHttpService", httpAddr, nil)
+	p := peer.NewGenericPeer("http.Acceptor", "GameSeverHttpService", config.GameServerOut, nil)
 
 	proc.BindProcessorHandler(p, "http", func(raw cellnet.Event) {
 	
 		switch msg := raw.Message().(type) {
-		case *proto.HttpEchoREQ:
-			httpLog.Debugln(reflect.TypeOf(msg),msg)
+		case *c2s_proto.HttpEchoREQ:
+			config.LogGameServer.Debugln(reflect.TypeOf(msg),msg)
 			raw.Session().Send(&httppeer.MessageRespond{
 				StatusCode: http.StatusOK,
-				Msg: &proto.HttpEchoACK{
+				Msg: &c2s_proto.HttpEchoACK{
 					Status: 0,
 					Token:  msg.UserName,
 				},
