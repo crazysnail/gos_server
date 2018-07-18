@@ -9,8 +9,8 @@ var LogChatServer = golog.New("ChatServer")
 var LogGameServer = golog.New("GameServer")
 var LogLoginServer = golog.New("LoginServer")
 
-var MongoDBInner = ""
-var MongoDBName = ""
+var DBInner = ""
+var DBName = ""
 var DomainName=""
 
 var CenterServerInner = ""
@@ -24,8 +24,8 @@ var LogConfig = golog.New("LogConfig")
 func init() {
 	configs := Get()
 
-	MongoDBInner = configs["MongoDBInner"]
-	MongoDBName = configs["MongoDBName"]
+	DBInner = configs["DBInner"]
+	DBName = configs["DBName"]
 	DomainName = configs["DomainName"]
 
 	CenterServerInner = configs["CenterServerInner"]

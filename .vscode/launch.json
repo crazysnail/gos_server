@@ -45,6 +45,20 @@
             "env": {"GOPATH":"/Users/admin/work/go/","GOS_ROOT":"/Users/admin/work/go/src/gos_server/"},
             "args": [],
             "showLog": true
+        },
+
+        {
+            "name": "MysqlTest",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/tool/mysql_test",            
+            "env": {"GOPATH":"/Users/admin/work/go/","GOS_ROOT":"/Users/admin/work/go/src/gos_server/"},
+            "args": [],
+            "showLog": true
         }
     ]
 }

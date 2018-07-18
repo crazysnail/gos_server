@@ -11,7 +11,7 @@ import (
 
 	"gos_server/proto/s2s_proto"
 	"gos_server/config"
-	"gos_server/center_server/db"
+	"gos_server/center_server/db/user"
 )
 
 
@@ -38,7 +38,7 @@ func TcpService() {
 		case *s2s_proto.ChatREQ:
 
 			// 写db
-			var c = db.Gmdb.DB("test").C("Chat")
+			var c = user.New("test",msg.Content)
 			if c == nil {
 				config.LogCenterServer.Errorln("Collection does not exist in db test!")
 			}
